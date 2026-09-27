@@ -264,6 +264,21 @@
   .roster-btn.replay{border-style:dashed}
   @media (max-width: 860px){ .laptop-lid{padding:8px 6px 10px} .hero .sub{font-size:18px} .hero .app-body{grid-template-columns:1fr} .hero .laptop{margin:0 4%} }
 
+  /* v9: 書籍『ランディングページ最強の3パターン』（中尾豊）の問題解決型の順序を反映 */
+  .hero .target{margin-top:16px; font-weight:700}
+  .pains{background:var(--surface)}
+  .pain-list{margin:24px 0 0; padding:0; list-style:none}
+  .pain-list li{position:relative; padding:14px 0 14px 34px; border-bottom:1px solid var(--line)}
+  .pain-list li::before{content:"?"; position:absolute; left:0; top:13px; width:24px; height:24px; border-radius:50%; background:var(--old); color:var(--surface);
+    font-weight:700; font-size:14px; display:flex; align-items:center; justify-content:center}
+  .pain-bridge{margin-top:24px; font-weight:700; color:var(--brand); font-size:19px}
+  .mid-cta{padding:40px 0; background:var(--brand-soft); text-align:left}
+  .mid-cta .wrap{display:flex; align-items:center; gap:16px 28px; flex-wrap:wrap}
+  .mid-cta p{font-weight:700; font-size:19px}
+  .fit-note{margin-top:24px; font-weight:700}
+  .form-benefit{margin-top:24px; font-weight:700; color:var(--brand)}
+  .form-benefit + .privacy{margin-top:8px}
+
   /* セクション共通 */
   section.block{padding:72px 0; border-top:1px solid var(--line)}
   .block h2{font-size:27px}
@@ -397,9 +412,10 @@
         <p class="status">開発前・先行登録を受け付けています</p>
         <h1 id="hero-title">Claudeのスキルを、<br>社内のみんなに配る。</h1>
         <p class="sub">直したら、全員に新しい版が届きます。</p>
+        <p class="target">個人プランのClaudeを何人かで使っていて、スキルを配る担当になった方へ。</p>
         <ul class="points">
           <li>Claudeの個人プラン（Pro・Max）を、社内の何人かで使っている会社向け</li>
-          <li>GitHubはいりません。メールアドレスとパスワードだけで使えます</li>
+          <li><strong>GitHubはいりません。</strong>メールアドレスとパスワードだけで使えます</li>
           <li>スキル（仕事の手順をClaudeに教える手順書）と、添付のテンプレートをまとめて配れます</li>
         </ul>
         <div class="hero-actions">
@@ -457,6 +473,20 @@
   </section>
 
 
+
+  <section class="block pains" aria-labelledby="pain-title">
+    <div class="wrap">
+      <h2 id="pain-title">こんなことで困っていませんか？</h2>
+      <ul class="pain-list measure">
+        <li>直したはずのスキルが、<strong>古い版のまま</strong>使われていた</li>
+        <li>誰が新しい版を使っているか、<strong>聞いて回らないと分からない</strong></li>
+        <li>zipを送り直しても、入れ直していない人に<strong>一人ずつ連絡</strong>している</li>
+        <li>GitHubを持っていない人には、<strong>自動で届ける方法がない</strong></li>
+      </ul>
+      <p class="pain-bridge measure">skill-hub は、この手間をなくすための仕組みです。</p>
+    </div>
+  </section>
+
   <section class="concept" aria-labelledby="concept-title">
     <div class="wrap">
       <h2 id="concept-title">skill-hub のしくみ</h2>
@@ -511,6 +541,12 @@
       </table>
     </div>
   </section>
+  <div class="mid-cta">
+    <div class="wrap">
+      <p>この違いが、あなたの会社にも当てはまるなら。</p>
+      <a class="btn" href="#waitlist" data-cta="mid">先行登録する</a>
+    </div>
+  </div>
 
   <section class="block" aria-labelledby="flow-title">
     <div class="wrap">
@@ -549,11 +585,20 @@
         <div>
           <h3>向いていない</h3>
           <ul>
-            <li>すでにClaudeの組織プラン（Team・Enterprise）を契約している。標準の機能でスキルを配れます</li>
-            <li>全員がGitHubを使っている。非公開のリポジトリから配る方法があります</li>
+            <li>組織プラン（Team・Enterprise）に移れる会社。標準の機能で配れるので、そのほうが確実です</li>
+            <li>全員がGitHubを使える会社。非公開のリポジトリから配るほうが自由がききます</li>
           </ul>
         </div>
       </div>
+      <p class="fit-note measure">skill-hub が役に立つのは、組織プランに移れない事情があり、GitHubを持っていない人にも配りたい会社です。</p>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="op-title">
+    <div class="wrap">
+      <h2 id="op-title">運営について</h2>
+      <p class="intro measure">skill-hub は、中小企業のAI導入支援と法人向けAI研修を行う <a href="https://tsumugiya-it.com/">つむぎや株式会社</a> が開発を検討しています。</p>
+      <p class="intro measure">仕様はまだ決まっていません。分かっていないことは「分かっていない」と書きます。先行登録した方には、決める前にご意見をうかがいます。</p>
     </div>
   </section>
 
@@ -583,22 +628,17 @@
         </details>
         <details>
           <summary>添付したスクリプトも動きますか？</summary>
-          <p>テンプレートや参考資料などのファイルは配れるようにします。スクリプトをClaudeの中で動かす方法は検証中のため、いまはお約束できません。</p>
+          <p>いまはお約束できません。Claudeの中で安全に動かす方法を検証している途中だからです。テンプレートや参考資料などのファイルは配れるようにします。</p>
         </details>
       </div>
     </div>
   </section>
 
-  <section class="block" aria-labelledby="op-title">
-    <div class="wrap">
-      <h2 id="op-title">運営について</h2>
-      <p class="intro measure">skill-hub は、中小企業のAI導入支援と法人向けAI研修を行う <a href="https://tsumugiya-it.com/">つむぎや株式会社</a> が開発を検討しています。</p>
-    </div>
-  </section>
 
   <section class="block" id="waitlist" aria-labelledby="waitlist-title">
     <div class="wrap">
       <h2 id="waitlist-title">先行登録</h2>
+      <p class="intro measure">まだ誰も使っていません。だからこそ、仕様を決める前に<strong>あなたの声を反映できます</strong>。先行登録の数で、開発を始めるかを決めます。</p>
       <p class="intro measure">メールアドレスだけで登録できます。ほかの項目は開発の判断に使うので、分かる範囲で教えてください。</p>
 
       <form class="form-panel" id="waitlist-form" novalidate>
@@ -641,6 +681,7 @@
           <input type="text" id="f-website" name="website" tabindex="-1" autocomplete="off">
         </div>
         <input type="hidden" name="ref" id="f-ref">
+        <p class="form-benefit">登録すると、仕様を決める前にご意見をうかがい、料金と開始時期も先にお知らせします。</p>
         <p class="privacy">いただいた情報は、skill-hub を開発するかどうかの判断と、お知らせの送付にだけ使います。</p>
         <div class="form-actions"><button type="submit" class="btn">先行登録する</button></div>
         <p class="form-status" id="form-status" role="alert"></p>
@@ -719,6 +760,7 @@
     if (!a) return;
     if (a.matches('.header-cta')) track('cta_click', {cta_id: 'header'});
     else if (a.matches('.hero-actions .btn')) track('cta_click', {cta_id: 'hero'});
+    else if (a.dataset.cta === 'mid') track('cta_click', {cta_id: 'mid'});
     else if (a.getAttribute('href') === './demo.html') track('demo_open', {link_id: a.closest('.hero') ? 'hero' : 'flow'});
     else if (a.id === 'roster-btn') track('roster_replay');
   });
