@@ -12,28 +12,28 @@
     /* ==== 色・フォント変数（index.html と揃える場合はここだけ変更） ==== */
     --font-sans: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
 
-    --color-bg: #f4f5f7;
+    --color-bg: #f5f6f0;
     --color-surface: #ffffff;
-    --color-surface-alt: #eef1f4;
-    --color-border: #dde1e7;
-    --color-text: #1f2430;
-    --color-text-muted: #5b6472;
-    --color-text-faint: #8a92a0;
+    --color-surface-alt: #eef0e8;
+    --color-border: #d9ddd3;
+    --color-text: #1e2a26;
+    --color-text-muted: #55615c;
+    --color-text-faint: #6b716c;
 
-    --color-primary: #2b6777;
-    --color-primary-hover: #224f5c;
-    --color-primary-soft: #e2eef0;
+    --color-primary: #24483e;
+    --color-primary-hover: #1b372f;
+    --color-primary-soft: #e3ece7;
     --color-primary-text: #ffffff;
 
-    --color-accent: #3d7a5c;
-    --color-accent-soft: #e4f1ea;
+    --color-accent: #24483e;
+    --color-accent-soft: #e3ece7;
 
-    --color-warning-bg: #fdf3df;
-    --color-warning-border: #eec981;
-    --color-warning-text: #6b4e12;
+    --color-warning-bg: #f3ecdc;
+    --color-warning-border: #dcc99c;
+    --color-warning-text: #5c4415;
 
-    --color-chip-bg: #eef1f4;
-    --color-chip-text: #4a5361;
+    --color-chip-bg: #eef0e8;
+    --color-chip-text: #55615c;
 
     --radius-sm: 6px;
     --radius-md: 10px;
@@ -43,40 +43,40 @@
 
   @media (prefers-color-scheme: dark){
     :root{
-      --color-bg: #14171c;
-      --color-surface: #1b1f26;
-      --color-surface-alt: #232833;
-      --color-border: #333a46;
-      --color-text: #e7eaef;
-      --color-text-muted: #a3abb8;
-      --color-text-faint: #767f8c;
+      --color-bg: #141a18;
+      --color-surface: #1b2320;
+      --color-surface-alt: #22302b;
+      --color-border: #2e3a35;
+      --color-text: #e6ebe8;
+      --color-text-muted: #a7b2ad;
+      --color-text-faint: #8e9591;
 
-      --color-primary: #5ea3b3;
-      --color-primary-hover: #7db8c6;
-      --color-primary-soft: #223038;
+      --color-primary: #8fc4b1;
+      --color-primary-hover: #a8d4c4;
+      --color-primary-soft: #22302b;
       --color-primary-text: #0d1418;
 
-      --color-accent: #6fbd93;
-      --color-accent-soft: #1d2b23;
+      --color-accent: #8fc4b1;
+      --color-accent-soft: #22302b;
 
-      --color-warning-bg: #382c14;
-      --color-warning-border: #7a5c22;
-      --color-warning-text: #f0d18e;
+      --color-warning-bg: #2e2616;
+      --color-warning-border: #5a4a26;
+      --color-warning-text: #e8d3a4;
 
-      --color-chip-bg: #232833;
-      --color-chip-text: #b7bfcb;
+      --color-chip-bg: #22302b;
+      --color-chip-text: #a7b2ad;
 
       --shadow-card: 0 1px 2px rgba(0,0,0,0.4), 0 1px 10px rgba(0,0,0,0.3);
     }
   }
 
   :root[data-theme="light"]{
-    --color-bg: #f4f5f7;
+    --color-bg: #f5f6f0;
     --color-surface: #ffffff;
   }
   :root[data-theme="dark"]{
-    --color-bg: #14171c;
-    --color-surface: #1b1f26;
+    --color-bg: #141a18;
+    --color-surface: #1b2320;
   }
 
   *,*::before,*::after{ box-sizing:border-box; }
@@ -284,6 +284,10 @@
   }
 
   /* ==== メンバー ==== */
+  .member-meta{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+  .member-ver{ font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+  .member-ver.is-old{ color:var(--color-text-faint); }
+  .member-ver.is-new{ color:var(--color-primary); }
   .member-row{
     display:flex;
     align-items:center;
@@ -591,7 +595,6 @@
 
   <header class="page-head">
     <div class="brand">
-      <div class="brand-mark">SH</div>
       <div class="brand-name">skill-hub</div>
     </div>
     <h1>デモ：スキルを配って、そのまま使ってもらう</h1>
@@ -606,13 +609,12 @@
 
   <!-- ============ 画面1: 配る人の管理画面 ============ -->
   <section class="panel is-active" id="panel-1">
-    <span class="disclaimer-inline">⚠ 画面イメージです。実際には動作しません（開発中）</span>
+    <span class="disclaimer-inline">画面イメージです。実際には動作しません（開発中）</span>
 
     <div class="card">
       <h2>スキルをアップロード</h2>
       <p class="card-desc">株式会社サンプル商事（配る人）の管理画面です。zipファイルをドラッグ＆ドロップすると、下の一覧に反映されます（見た目のみ・ファイルは送信されません）。</p>
       <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="zipファイルをドラッグ＆ドロップ、またはクリックしてアップロードを試す">
-        <div class="dz-icon">📁</div>
         <div>ここに zip ファイルをドラッグ＆ドロップ</div>
         <div class="dz-sub">またはクリックしてアップロードを試す（見積書作成スキルが v1.4 に更新されます）</div>
       </div>
@@ -666,8 +668,8 @@
     </div>
 
     <div class="card">
-      <h2>メンバー</h2>
-      <p class="card-desc">スキルを使えるメンバーの一覧です（メールアドレスはすべて架空の例です）。</p>
+      <h2>メンバーと配布状況</h2>
+      <p class="card-desc">スキルを使えるメンバーと、それぞれが使っている版の一覧です（メールアドレスはすべて架空の例です）。</p>
 
       <div id="member-list">
         <div class="member-row">
@@ -678,7 +680,7 @@
               <div class="member-email">yamada@example.co.jp</div>
             </div>
           </div>
-          <span class="role-chip">管理者</span>
+          <span class="member-meta"><span class="member-ver is-old">見積書作成 v1.3</span><span class="role-chip">管理者</span></span>
         </div>
         <div class="member-row">
           <div class="member-id">
@@ -688,7 +690,7 @@
               <div class="member-email">sato@example-corp.jp</div>
             </div>
           </div>
-          <span class="role-chip">メンバー</span>
+          <span class="member-meta"><span class="member-ver is-old">見積書作成 v1.3</span><span class="role-chip">メンバー</span></span>
         </div>
         <div class="member-row">
           <div class="member-id">
@@ -698,7 +700,7 @@
               <div class="member-email">suzuki@example-trading.jp</div>
             </div>
           </div>
-          <span class="role-chip">メンバー</span>
+          <span class="member-meta"><span class="member-ver is-old">見積書作成 v1.3</span><span class="role-chip">メンバー</span></span>
         </div>
       </div>
 
@@ -711,7 +713,7 @@
 
   <!-- ============ 画面2: 使う人の初回設定 ============ -->
   <section class="panel" id="panel-2">
-    <span class="disclaimer-inline">⚠ 画面イメージです。実際には動作しません（開発中）</span>
+    <span class="disclaimer-inline">画面イメージです。実際には動作しません（開発中）</span>
 
     <div class="card">
       <h2>初回設定は3ステップ・1回だけ</h2>
@@ -762,7 +764,7 @@
 
   <!-- ============ 画面3: 普段の利用 ============ -->
   <section class="panel" id="panel-3">
-    <span class="disclaimer-inline">⚠ 画面イメージです。実際には動作しません（開発中）</span>
+    <span class="disclaimer-inline">画面イメージです。実際には動作しません（開発中）</span>
 
     <div class="card">
       <h2>普段の会話の中で、自動で最新版が使われる</h2>
@@ -832,12 +834,13 @@
     if(updated) return;
     dropzone.querySelector(".dz-sub").textContent = "アップロード中…（画面イメージ）";
     setTimeout(function(){
-      verBadge.textContent = "v1.3 → v1.4";
+      verBadge.textContent = "v1.4";
       verBadge.classList.add("just-updated");
       dateCell.textContent = todayStr();
       row.classList.add("row-updated");
       dropzone.querySelector(".dz-sub").textContent = "アップロード済み（画面イメージ・実際のファイルは送信されていません）";
       toast.classList.add("is-show");
+      Array.prototype.forEach.call(document.querySelectorAll(".member-ver"), function(el){ el.textContent = "見積書作成 v1.4"; el.className = "member-ver is-new"; });
       updated = true;
     }, 700);
   }
