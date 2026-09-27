@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>skill-hub デモ（画面イメージ）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* ==== 色・フォント変数（index.html と揃える場合はここだけ変更） ==== */
+    --font-sans: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+
+    --color-bg: #f4f5f7;
+    --color-surface: #ffffff;
+    --color-surface-alt: #eef1f4;
+    --color-border: #dde1e7;
+    --color-text: #1f2430;
+    --color-text-muted: #5b6472;
+    --color-text-faint: #8a92a0;
+
+    --color-primary: #2b6777;
+    --color-primary-hover: #224f5c;
+    --color-primary-soft: #e2eef0;
+    --color-primary-text: #ffffff;
+
+    --color-accent: #3d7a5c;
+    --color-accent-soft: #e4f1ea;
+
+    --color-warning-bg: #fdf3df;
+    --color-warning-border: #eec981;
+    --color-warning-text: #6b4e12;
+
+    --color-chip-bg: #eef1f4;
+    --color-chip-text: #4a5361;
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --shadow-card: 0 1px 2px rgba(20,24,30,0.06), 0 1px 8px rgba(20,24,30,0.05);
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root{
+      --color-bg: #14171c;
+      --color-surface: #1b1f26;
+      --color-surface-alt: #232833;
+      --color-border: #333a46;
+      --color-text: #e7eaef;
+      --color-text-muted: #a3abb8;
+      --color-text-faint: #767f8c;
+
+      --color-primary: #5ea3b3;
+      --color-primary-hover: #7db8c6;
+      --color-primary-soft: #223038;
+      --color-primary-text: #0d1418;
+
+      --color-accent: #6fbd93;
+      --color-accent-soft: #1d2b23;
+
+      --color-warning-bg: #382c14;
+      --color-warning-border: #7a5c22;
+      --color-warning-text: #f0d18e;
+
+      --color-chip-bg: #232833;
+      --color-chip-text: #b7bfcb;
+
+      --shadow-card: 0 1px 2px rgba(0,0,0,0.4), 0 1px 10px rgba(0,0,0,0.3);
+    }
+  }
+
+  :root[data-theme="light"]{
+    --color-bg: #f4f5f7;
+    --color-surface: #ffffff;
+  }
+  :root[data-theme="dark"]{
+    --color-bg: #14171c;
+    --color-surface: #1b1f26;
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:var(--color-bg);
+    color:var(--color-text);
+    font-family:var(--font-sans);
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    min-width:0;
+  }
+  img,svg{ max-width:100%; display:block; }
+
+  .wrap{
+    max-width:880px;
+    margin:0 auto;
+    padding:0 16px 48px;
+  }
+
+  /* ==== 免責バナー ==== */
+  .disclaimer-top{
+    background:var(--color-warning-bg);
+    border-bottom:1px solid var(--color-warning-border);
+    color:var(--color-warning-text);
+    font-size:13px;
+    font-weight:500;
+    text-align:center;
+    padding:9px 12px;
+  }
+  .disclaimer-inline{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--color-warning-bg);
+    border:1px solid var(--color-warning-border);
+    color:var(--color-warning-text);
+    font-size:12.5px;
+    font-weight:500;
+    padding:6px 10px;
+    border-radius:999px;
+    margin-bottom:16px;
+  }
+
+  /* ==== ヘッダー ==== */
+  header.page-head{
+    padding:28px 0 8px;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:6px;
+  }
+  .brand-mark{
+    width:30px;height:30px;border-radius:8px;
+    background:var(--color-primary);
+    color:var(--color-primary-text);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:14px;
+    flex:none;
+  }
+  .brand-name{ font-weight:700; font-size:18px; letter-spacing:.01em; }
+  .page-head h1{
+    font-size:22px;
+    margin:10px 0 6px;
+  }
+  .page-head p.lead{
+    color:var(--color-text-muted);
+    font-size:14.5px;
+    margin:0 0 18px;
+  }
+
+  /* ==== タブ ==== */
+  .tabs{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:22px;
+    border-bottom:1px solid var(--color-border);
+    padding-bottom:14px;
+  }
+  .tab-btn{
+    appearance:none;
+    border:1px solid var(--color-border);
+    background:var(--color-surface);
+    color:var(--color-text-muted);
+    font-family:inherit;
+    font-size:13.5px;
+    font-weight:500;
+    padding:9px 14px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease, border-color .15s ease;
+    white-space:nowrap;
+  }
+  .tab-btn:hover{ border-color:var(--color-primary); color:var(--color-text); }
+  .tab-btn.is-active{
+    background:var(--color-primary);
+    border-color:var(--color-primary);
+    color:var(--color-primary-text);
+  }
+  .tab-btn .num{
+    display:inline-block;
+    margin-right:4px;
+  }
+
+  .panel{ display:none; }
+  .panel.is-active{ display:block; }
+
+  .card{
+    background:var(--color-surface);
+    border:1px solid var(--color-border);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-card);
+    padding:20px;
+    margin-bottom:18px;
+  }
+  .card h2{
+    font-size:16.5px;
+    margin:0 0 4px;
+  }
+  .card .card-desc{
+    color:var(--color-text-muted);
+    font-size:13.5px;
+    margin:0 0 16px;
+  }
+
+  /* ==== ドロップゾーン ==== */
+  .dropzone{
+    border:2px dashed var(--color-border);
+    border-radius:var(--radius-md);
+    padding:26px 16px;
+    text-align:center;
+    color:var(--color-text-muted);
+    font-size:13.5px;
+    background:var(--color-surface-alt);
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .dropzone.is-drag{
+    border-color:var(--color-primary);
+    background:var(--color-primary-soft);
+    color:var(--color-text);
+  }
+  .dropzone .dz-icon{ font-size:26px; margin-bottom:6px; }
+  .dropzone .dz-sub{ font-size:12px; color:var(--color-text-faint); margin-top:4px; }
+
+  .toast{
+    margin-top:10px;
+    font-size:13px;
+    font-weight:500;
+    color:var(--color-accent);
+    background:var(--color-accent-soft);
+    border-radius:var(--radius-sm);
+    padding:8px 12px;
+    display:none;
+  }
+  .toast.is-show{ display:block; }
+
+  /* ==== テーブル（スキル一覧） ==== */
+  .table-wrap{ overflow-x:auto; }
+  table.skills{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13.5px;
+    min-width:520px;
+  }
+  table.skills th, table.skills td{
+    text-align:left;
+    padding:10px 10px;
+    border-bottom:1px solid var(--color-border);
+    vertical-align:middle;
+  }
+  table.skills th{
+    color:var(--color-text-faint);
+    font-weight:500;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+  }
+  .skill-name{ font-weight:700; }
+  .skill-desc{ color:var(--color-text-muted); font-size:12.5px; }
+  .ver-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-family:ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--color-primary);
+    background:var(--color-primary-soft);
+    padding:3px 9px;
+    border-radius:999px;
+    transition:background .3s ease, color .3s ease;
+  }
+  .ver-badge.just-updated{
+    background:var(--color-accent-soft);
+    color:var(--color-accent);
+  }
+  .row-updated{ animation:rowflash 1.2s ease; }
+  @keyframes rowflash{
+    0%{ background:var(--color-accent-soft); }
+    100%{ background:transparent; }
+  }
+
+  /* ==== メンバー ==== */
+  .member-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:10px 0;
+    border-bottom:1px solid var(--color-border);
+    font-size:13.5px;
+  }
+  .member-row:last-child{ border-bottom:none; }
+  .member-id{ display:flex; align-items:center; gap:10px; min-width:0; }
+  .avatar{
+    width:30px;height:30px;border-radius:50%;
+    background:var(--color-chip-bg);
+    color:var(--color-chip-text);
+    display:flex;align-items:center;justify-content:center;
+    font-size:12.5px;font-weight:700;
+    flex:none;
+  }
+  .member-name{ font-weight:600; }
+  .member-email{ color:var(--color-text-muted); font-size:12.5px; }
+  .role-chip{
+    font-size:11.5px;
+    color:var(--color-chip-text);
+    background:var(--color-chip-bg);
+    padding:3px 9px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+
+  .invite-form{
+    display:flex;
+    gap:8px;
+    margin-top:14px;
+    flex-wrap:wrap;
+  }
+  .invite-form input{
+    flex:1 1 200px;
+    min-width:0;
+    padding:9px 11px;
+    border:1px solid var(--color-border);
+    border-radius:var(--radius-sm);
+    background:var(--color-surface);
+    color:var(--color-text);
+    font-family:inherit;
+    font-size:13.5px;
+  }
+  .invite-form input:focus{ outline:2px solid var(--color-primary); outline-offset:1px; }
+
+  .btn{
+    appearance:none;
+    border:none;
+    border-radius:var(--radius-sm);
+    padding:9px 16px;
+    font-family:inherit;
+    font-size:13.5px;
+    font-weight:700;
+    cursor:pointer;
+    background:var(--color-primary);
+    color:var(--color-primary-text);
+    transition:background .15s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{ background:var(--color-primary-hover); }
+  .btn.btn-outline{
+    background:transparent;
+    color:var(--color-primary);
+    border:1px solid var(--color-primary);
+  }
+  .btn.btn-outline:hover{ background:var(--color-primary-soft); }
+  .btn:disabled{ opacity:.55; cursor:default; }
+
+  /* ==== ステップ（初回設定） ==== */
+  .steps{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+  }
+  .step{
+    display:flex;
+    gap:14px;
+    padding:14px 0;
+    position:relative;
+  }
+  .step:not(:last-child)::after{
+    content:"";
+    position:absolute;
+    left:15px;
+    top:44px;
+    bottom:-6px;
+    width:2px;
+    background:var(--color-border);
+  }
+  .step-num{
+    flex:none;
+    width:32px;height:32px;
+    border-radius:50%;
+    background:var(--color-primary);
+    color:var(--color-primary-text);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;
+    font-size:14px;
+    z-index:1;
+  }
+  .step-body{ flex:1; min-width:0; padding-top:2px; }
+  .step-body h3{ font-size:14.5px; margin:0 0 6px; }
+  .step-body p{ font-size:13px; color:var(--color-text-muted); margin:0 0 10px; }
+
+  .mock-ui{
+    border:1px solid var(--color-border);
+    border-radius:var(--radius-md);
+    background:var(--color-surface-alt);
+    padding:12px;
+    font-size:12.5px;
+  }
+  .mock-ui .mock-title{
+    font-size:11px;
+    color:var(--color-text-faint);
+    margin-bottom:8px;
+    display:flex;
+    justify-content:space-between;
+  }
+  .mock-menu-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:8px 10px;
+    border-radius:var(--radius-sm);
+    background:var(--color-surface);
+    border:1px solid var(--color-border);
+    margin-bottom:6px;
+  }
+  .mock-menu-item.highlight{
+    border-color:var(--color-primary);
+    background:var(--color-primary-soft);
+    font-weight:700;
+  }
+  .mock-input{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--color-surface);
+    border:1px solid var(--color-border);
+    border-radius:var(--radius-sm);
+    padding:8px 10px;
+    font-family:ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size:12px;
+    color:var(--color-text-muted);
+    overflow-x:auto;
+    white-space:nowrap;
+  }
+  .login-mock{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    max-width:280px;
+  }
+  .login-mock input{
+    padding:8px 10px;
+    border:1px solid var(--color-border);
+    border-radius:var(--radius-sm);
+    background:var(--color-surface);
+    color:var(--color-text);
+    font-family:inherit;
+    font-size:12.5px;
+  }
+  .success-box{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--color-accent-soft);
+    color:var(--color-accent);
+    border-radius:var(--radius-sm);
+    padding:10px 12px;
+    font-size:13px;
+    font-weight:700;
+  }
+
+  /* ==== チャット（普段の利用） ==== */
+  .chat-frame{
+    border:1px solid var(--color-border);
+    border-radius:var(--radius-lg);
+    overflow:hidden;
+    background:var(--color-surface);
+  }
+  .chat-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:10px 14px;
+    border-bottom:1px solid var(--color-border);
+    background:var(--color-surface-alt);
+    font-size:12.5px;
+    color:var(--color-text-muted);
+    flex-wrap:wrap;
+  }
+  .chat-topbar .app-badge{
+    font-weight:700;
+    color:var(--color-text);
+  }
+  .update-banner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    background:var(--color-warning-bg);
+    border-bottom:1px solid var(--color-warning-border);
+    color:var(--color-warning-text);
+    font-size:12.5px;
+    padding:9px 14px;
+  }
+  .update-banner button{
+    appearance:none;
+    background:none;
+    border:none;
+    color:inherit;
+    font-size:14px;
+    cursor:pointer;
+    line-height:1;
+    padding:2px 4px;
+  }
+  .chat-body{
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    min-height:220px;
+  }
+  .bubble{
+    max-width:82%;
+    padding:10px 13px;
+    border-radius:var(--radius-md);
+    font-size:13.5px;
+    line-height:1.65;
+  }
+  .bubble.user{
+    align-self:flex-end;
+    background:var(--color-primary);
+    color:var(--color-primary-text);
+    border-bottom-right-radius:3px;
+  }
+  .bubble.assistant{
+    align-self:flex-start;
+    background:var(--color-surface-alt);
+    color:var(--color-text);
+    border-bottom-left-radius:3px;
+  }
+  .bubble.system{
+    align-self:center;
+    background:transparent;
+    border:1px dashed var(--color-border);
+    color:var(--color-text-muted);
+    font-size:12px;
+    padding:7px 12px;
+  }
+  .chat-inputbar{
+    display:flex;
+    gap:8px;
+    padding:12px 14px;
+    border-top:1px solid var(--color-border);
+    background:var(--color-surface-alt);
+  }
+  .chat-inputbar input{
+    flex:1;
+    min-width:0;
+    padding:9px 12px;
+    border:1px solid var(--color-border);
+    border-radius:999px;
+    background:var(--color-surface);
+    color:var(--color-text-faint);
+    font-family:inherit;
+    font-size:13px;
+  }
+  .chat-inputbar .btn{ border-radius:999px; }
+
+  footer.page-foot{
+    margin-top:28px;
+    text-align:center;
+  }
+  .back-link{
+    color:var(--color-primary);
+    font-size:13.5px;
+    font-weight:600;
+    text-decoration:none;
+  }
+  .back-link:hover{ text-decoration:underline; }
+
+  @media (max-width:480px){
+    .wrap{ padding:0 12px 40px; }
+    .card{ padding:16px; }
+    .tabs{ gap:6px; }
+    .tab-btn{ font-size:12.5px; padding:8px 11px; }
+    .bubble{ max-width:92%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="disclaimer-top">
+  画面イメージです。実際には動作しません（開発中）
+</div>
+
+<div class="wrap">
+
+  <header class="page-head">
+    <div class="brand">
+      <div class="brand-mark">SH</div>
+      <div class="brand-name">skill-hub</div>
+    </div>
+    <h1>デモ：スキルを配って、そのまま使ってもらう</h1>
+    <p class="lead">配る人・使う人・普段の会話の3つの画面イメージです。ボタンやドラッグ操作は見た目だけで、データの送信や保存は行われません。</p>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="デモ画面の切り替え">
+    <button class="tab-btn is-active" data-target="panel-1" role="tab" aria-selected="true"><span class="num">①</span>配る人の管理画面</button>
+    <button class="tab-btn" data-target="panel-2" role="tab" aria-selected="false"><span class="num">②</span>使う人の初回設定</button>
+    <button class="tab-btn" data-target="panel-3" role="tab" aria-selected="false"><span class="num">③</span>普段の利用</button>
+  </nav>
+
+  <!-- ============ 画面1: 配る人の管理画面 ============ -->
+  <section class="panel is-active" id="panel-1">
+    <span class="disclaimer-inline">⚠ 画面イメージです。実際には動作しません（開発中）</span>
+
+    <div class="card">
+      <h2>スキルをアップロード</h2>
+      <p class="card-desc">株式会社サンプル商事（配る人）の管理画面です。zipファイルをドラッグ＆ドロップすると、下の一覧に反映されます（見た目のみ・ファイルは送信されません）。</p>
+      <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="zipファイルをドラッグ＆ドロップ、またはクリックしてアップロードを試す">
+        <div class="dz-icon">📁</div>
+        <div>ここに zip ファイルをドラッグ＆ドロップ</div>
+        <div class="dz-sub">またはクリックしてアップロードを試す（見積書作成スキルが v1.4 に更新されます）</div>
+      </div>
+      <div class="toast" id="upload-toast">「見積書作成」を v1.4 に更新しました（画面イメージ・実際のファイルは送信されていません）</div>
+    </div>
+
+    <div class="card">
+      <h2>配布中のスキル</h2>
+      <p class="card-desc">組織のメンバー全員に、常に最新版が届きます。</p>
+      <div class="table-wrap">
+        <table class="skills">
+          <thead>
+            <tr>
+              <th>スキル名</th>
+              <th>版</th>
+              <th>付属ファイル</th>
+              <th>更新日</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="row-mitsumori">
+              <td>
+                <div class="skill-name">見積書作成</div>
+                <div class="skill-desc">見積書のテンプレートに沿って自動作成する</div>
+              </td>
+              <td><span class="ver-badge" id="ver-badge">v1.3</span></td>
+              <td>4件</td>
+              <td id="date-mitsumori">2026-08-20</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="skill-name">議事録整形</div>
+                <div class="skill-desc">会議メモを議事録の形式に整形する</div>
+              </td>
+              <td><span class="ver-badge">v2.1</span></td>
+              <td>2件</td>
+              <td>2026-09-10</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="skill-name">請求書チェック</div>
+                <div class="skill-desc">請求書の記載漏れを確認する</div>
+              </td>
+              <td><span class="ver-badge">v1.0</span></td>
+              <td>1件</td>
+              <td>2026-08-01</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>メンバー</h2>
+      <p class="card-desc">スキルを使えるメンバーの一覧です（メールアドレスはすべて架空の例です）。</p>
+
+      <div id="member-list">
+        <div class="member-row">
+          <div class="member-id">
+            <div class="avatar">山</div>
+            <div>
+              <div class="member-name">山田 花子</div>
+              <div class="member-email">yamada@example.co.jp</div>
+            </div>
+          </div>
+          <span class="role-chip">管理者</span>
+        </div>
+        <div class="member-row">
+          <div class="member-id">
+            <div class="avatar">佐</div>
+            <div>
+              <div class="member-name">佐藤 健一</div>
+              <div class="member-email">sato@example-corp.jp</div>
+            </div>
+          </div>
+          <span class="role-chip">メンバー</span>
+        </div>
+        <div class="member-row">
+          <div class="member-id">
+            <div class="avatar">鈴</div>
+            <div>
+              <div class="member-name">鈴木 愛</div>
+              <div class="member-email">suzuki@example-trading.jp</div>
+            </div>
+          </div>
+          <span class="role-chip">メンバー</span>
+        </div>
+      </div>
+
+      <div class="invite-form">
+        <input type="email" id="invite-email" placeholder="例: takahashi@example-works.jp">
+        <button class="btn" id="invite-btn">招待する</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 画面2: 使う人の初回設定 ============ -->
+  <section class="panel" id="panel-2">
+    <span class="disclaimer-inline">⚠ 画面イメージです。実際には動作しません（開発中）</span>
+
+    <div class="card">
+      <h2>初回設定は3ステップ・1回だけ</h2>
+      <p class="card-desc">一度つないでおけば、以後は何もしなくてもスキルが最新の状態で使えます。</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h3>Claudeアプリ（イメージ）で「コネクタ」を開く</h3>
+            <p>カスタマイズ → コネクタ → ＋ の順で進みます。</p>
+            <div class="mock-ui">
+              <div class="mock-title"><span>カスタマイズ（イメージ）</span></div>
+              <div class="mock-menu-item"><span>プロフィール</span><span>›</span></div>
+              <div class="mock-menu-item highlight"><span>コネクタ</span><span>›</span></div>
+              <div class="mock-menu-item"><span>通知</span><span>›</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h3>配布URLを貼る</h3>
+            <p>配る人から共有されたURLを「＋」から貼り付けます。</p>
+            <div class="mock-input">https://hub.example.com/mcp/samplecorp</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h3>skill-hub にログインする</h3>
+            <p>メールアドレスとパスワードだけでログインします（架空の入力例です）。</p>
+            <div class="login-mock">
+              <input type="text" value="yamada@example.co.jp" readonly>
+              <input type="password" value="••••••••" readonly>
+              <button class="btn" id="login-btn">ログイン</button>
+            </div>
+            <div class="success-box" id="login-success" style="display:none; margin-top:10px;">
+              ✅ 接続しました
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 画面3: 普段の利用 ============ -->
+  <section class="panel" id="panel-3">
+    <span class="disclaimer-inline">⚠ 画面イメージです。実際には動作しません（開発中）</span>
+
+    <div class="card">
+      <h2>普段の会話の中で、自動で最新版が使われる</h2>
+      <p class="card-desc">利用者は何もしなくても、常に最新のスキルが読み込まれます。</p>
+
+      <div class="chat-frame">
+        <div class="chat-topbar">
+          <span class="app-badge">Claudeアプリ（イメージ）</span>
+          <span>汎用チャット画面・実際の製品画面とは異なります</span>
+        </div>
+        <div class="update-banner">
+          <span>🔔 「見積書作成」スキルは昨日 v1.4 に自動更新されました</span>
+          <button aria-label="通知を閉じる" id="banner-close">×</button>
+        </div>
+        <div class="chat-body">
+          <div class="bubble user">来月の見積書を作って</div>
+          <div class="bubble system">🔧 skill-hub から「見積書作成」スキル（v1.4）を読み込みました</div>
+          <div class="bubble assistant">見積書作成のテンプレートを確認しました。宛先の会社名、品目、数量、単価を教えてください。フォーマットは前回と同じ形式で作成します。</div>
+        </div>
+        <div class="chat-inputbar">
+          <input type="text" value="メッセージを入力…" readonly>
+          <button class="btn" disabled>送信</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="page-foot">
+    <a class="back-link" href="./index.html">← LPに戻る</a>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---- タブ切り替え ----
+  var tabBtns = document.querySelectorAll(".tab-btn");
+  var panels = document.querySelectorAll(".panel");
+  tabBtns.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      tabBtns.forEach(function(b){ b.classList.remove("is-active"); b.setAttribute("aria-selected","false"); });
+      panels.forEach(function(p){ p.classList.remove("is-active"); });
+      btn.classList.add("is-active");
+      btn.setAttribute("aria-selected","true");
+      var target = document.getElementById(btn.getAttribute("data-target"));
+      if(target){ target.classList.add("is-active"); }
+    });
+  });
+
+  // ---- 画面1: ドラッグ&ドロップ（見た目のみ） ----
+  var dropzone = document.getElementById("dropzone");
+  var verBadge = document.getElementById("ver-badge");
+  var dateCell = document.getElementById("date-mitsumori");
+  var row = document.getElementById("row-mitsumori");
+  var toast = document.getElementById("upload-toast");
+  var updated = false;
+
+  function todayStr(){
+    var d = new Date();
+    var pad = function(n){ return (n<10?"0":"")+n; };
+    return d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(d.getDate());
+  }
+
+  function simulateUpload(){
+    if(updated) return;
+    dropzone.querySelector(".dz-sub").textContent = "アップロード中…（画面イメージ）";
+    setTimeout(function(){
+      verBadge.textContent = "v1.3 → v1.4";
+      verBadge.classList.add("just-updated");
+      dateCell.textContent = todayStr();
+      row.classList.add("row-updated");
+      dropzone.querySelector(".dz-sub").textContent = "アップロード済み（画面イメージ・実際のファイルは送信されていません）";
+      toast.classList.add("is-show");
+      updated = true;
+    }, 700);
+  }
+
+  ["dragenter","dragover"].forEach(function(evt){
+    dropzone.addEventListener(evt, function(e){
+      e.preventDefault();
+      dropzone.classList.add("is-drag");
+    });
+  });
+  ["dragleave","dragend"].forEach(function(evt){
+    dropzone.addEventListener(evt, function(e){
+      dropzone.classList.remove("is-drag");
+    });
+  });
+  dropzone.addEventListener("drop", function(e){
+    e.preventDefault();
+    dropzone.classList.remove("is-drag");
+    simulateUpload();
+  });
+  dropzone.addEventListener("click", simulateUpload);
+  dropzone.addEventListener("keypress", function(e){
+    if(e.key === "Enter" || e.key === " "){ simulateUpload(); }
+  });
+
+  // ---- 画面1: 招待（見た目のみ） ----
+  var inviteBtn = document.getElementById("invite-btn");
+  var inviteEmail = document.getElementById("invite-email");
+  var memberList = document.getElementById("member-list");
+
+  inviteBtn.addEventListener("click", function(){
+    var val = (inviteEmail.value || "").trim();
+    if(!val){ return; }
+    var initial = val.charAt(0).toUpperCase();
+    var row = document.createElement("div");
+    row.className = "member-row";
+    row.innerHTML =
+      '<div class="member-id">' +
+        '<div class="avatar">' + initial + '</div>' +
+        '<div><div class="member-name">招待中のメンバー</div>' +
+        '<div class="member-email">' + escapeHtml(val) + '</div></div>' +
+      '</div>' +
+      '<span class="role-chip">招待メール送信済み（画面イメージ）</span>';
+    memberList.appendChild(row);
+    inviteEmail.value = "";
+  });
+
+  function escapeHtml(str){
+    var div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // ---- 画面2: ログイン（見た目のみ） ----
+  var loginBtn = document.getElementById("login-btn");
+  var loginSuccess = document.getElementById("login-success");
+  loginBtn.addEventListener("click", function(){
+    loginBtn.disabled = true;
+    loginBtn.textContent = "接続中…";
+    setTimeout(function(){
+      loginBtn.textContent = "ログイン済み";
+      loginSuccess.style.display = "flex";
+    }, 500);
+  });
+
+  // ---- 画面3: 通知バナーを閉じる ----
+  var bannerClose = document.getElementById("banner-close");
+  bannerClose.addEventListener("click", function(){
+    bannerClose.closest(".update-banner").style.display = "none";
+  });
+
+})();
+</script>
+
+</body>
+</html>

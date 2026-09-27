@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>skill-hub｜Claudeのスキルを社内に配る</title>
+<meta name="description" content="Claudeのスキルを、GitHubを使わずメールアドレスとパスワードだけで社内に配布・自動更新する仕組みです。現在開発中・先行登録受付中。">
+<meta property="og:title" content="skill-hub｜Claudeのスキルを社内に配る">
+<meta property="og:description" content="GitHubなし。メールアドレスとパスワードだけで、Claudeのスキルを社内に配布・自動更新します。現在開発中・先行登録受付中。">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* ==== 色・フォント変数（demo.html と揃えている） ==== */
+    --font-sans: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+
+    --color-bg: #f4f5f7;
+    --color-surface: #ffffff;
+    --color-surface-alt: #eef1f4;
+    --color-border: #dde1e7;
+    --color-text: #1f2430;
+    --color-text-muted: #5b6472;
+    --color-text-faint: #8a92a0;
+
+    --color-primary: #2b6777;
+    --color-primary-hover: #224f5c;
+    --color-primary-soft: #e2eef0;
+    --color-primary-text: #ffffff;
+
+    --color-accent: #3d7a5c;
+    --color-accent-soft: #e4f1ea;
+
+    --color-warning-bg: #fdf3df;
+    --color-warning-border: #eec981;
+    --color-warning-text: #6b4e12;
+
+    --color-chip-bg: #eef1f4;
+    --color-chip-text: #4a5361;
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --shadow-card: 0 1px 2px rgba(20,24,30,0.06), 0 1px 8px rgba(20,24,30,0.05);
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root{
+      --color-bg: #14171c;
+      --color-surface: #1b1f26;
+      --color-surface-alt: #232833;
+      --color-border: #333a46;
+      --color-text: #e7eaef;
+      --color-text-muted: #a3abb8;
+      --color-text-faint: #767f8c;
+
+      --color-primary: #5ea3b3;
+      --color-primary-hover: #7db8c6;
+      --color-primary-soft: #223038;
+      --color-primary-text: #0d1418;
+
+      --color-accent: #6fbd93;
+      --color-accent-soft: #1d2b23;
+
+      --color-warning-bg: #382c14;
+      --color-warning-border: #7a5c22;
+      --color-warning-text: #f0d18e;
+
+      --color-chip-bg: #232833;
+      --color-chip-text: #b7bfcb;
+
+      --shadow-card: 0 1px 2px rgba(0,0,0,0.4), 0 1px 10px rgba(0,0,0,0.3);
+    }
+  }
+
+  :root[data-theme="light"]{
+    --color-bg: #f4f5f7;
+    --color-surface: #ffffff;
+  }
+  :root[data-theme="dark"]{
+    --color-bg: #14171c;
+    --color-surface: #1b1f26;
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:var(--color-bg);
+    color:var(--color-text);
+    font-family:var(--font-sans);
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    min-width:0;
+  }
+  img,svg,iframe{ max-width:100%; display:block; }
+  a{ color:var(--color-primary); }
+
+  .wrap{
+    max-width:880px;
+    margin:0 auto;
+    padding:0 16px 56px;
+  }
+
+  section{ padding:40px 0; }
+  section + section{ border-top:1px solid var(--color-border); }
+
+  h2.section-title{
+    font-size:20px;
+    margin:0 0 6px;
+  }
+  p.section-lead{
+    color:var(--color-text-muted);
+    font-size:14px;
+    margin:0 0 24px;
+  }
+
+  /* ==== ヘッダー ==== */
+  header.site-head{
+    padding:20px 0 0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .brand-mark{
+    width:32px;height:32px;border-radius:8px;
+    background:var(--color-primary);
+    color:var(--color-primary-text);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:900;font-size:14px;
+    flex:none;
+  }
+  .brand-name{ font-weight:700; font-size:18px; letter-spacing:.01em; }
+  .head-cta{
+    font-size:13px;
+    font-weight:700;
+    color:var(--color-primary);
+    text-decoration:none;
+    padding:8px 14px;
+    border:1px solid var(--color-primary);
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .head-cta:hover{ background:var(--color-primary-soft); }
+
+  /* ==== ヒーロー ==== */
+  .hero{
+    padding:36px 0 44px;
+    text-align:center;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--color-warning-bg);
+    border:1px solid var(--color-warning-border);
+    color:var(--color-warning-text);
+    font-size:12.5px;
+    font-weight:700;
+    padding:6px 14px;
+    border-radius:999px;
+    margin-bottom:18px;
+  }
+  .hero h1{
+    font-size:30px;
+    line-height:1.5;
+    margin:0 0 14px;
+    letter-spacing:.01em;
+  }
+  .hero .hero-sub{
+    font-size:16px;
+    color:var(--color-text-muted);
+    margin:0 auto 28px;
+    max-width:560px;
+  }
+  .hero-actions{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .hero-note{
+    margin-top:16px;
+    font-size:12.5px;
+    color:var(--color-text-faint);
+  }
+
+  .btn{
+    appearance:none;
+    border:none;
+    border-radius:var(--radius-sm);
+    padding:13px 26px;
+    font-family:inherit;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    background:var(--color-primary);
+    color:var(--color-primary-text);
+    transition:background .15s ease;
+    white-space:nowrap;
+    text-decoration:none;
+    display:inline-block;
+  }
+  .btn:hover{ background:var(--color-primary-hover); }
+  .btn:disabled{ opacity:.55; cursor:default; }
+  .btn.btn-outline{
+    background:transparent;
+    color:var(--color-primary);
+    border:1px solid var(--color-primary);
+    padding:12px 25px;
+  }
+  .btn.btn-outline:hover{ background:var(--color-primary-soft); }
+  .btn.btn-block{ width:100%; text-align:center; }
+
+  /* ==== カード共通 ==== */
+  .card{
+    background:var(--color-surface);
+    border:1px solid var(--color-border);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-card);
+    padding:20px;
+  }
+
+  /* ==== 困っていませんか ==== */
+  .pain-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:14px;
+  }
+  .pain-card{
+    background:var(--color-surface);
+    border:1px solid var(--color-border);
+    border-radius:var(--radius-md);
+    padding:18px 16px;
+  }
+  .pain-card .pain-icon{ font-size:22px; margin-bottom:8px; }
+  .pain-card p{
+    font-size:13.5px;
+    margin:0;
+    color:var(--color-text);
+  }
+  @media (max-width:680px){
+    .pain-grid{ grid-template-columns:1fr; }
+  }
+
+  /* ==== 仕組み（ステップ） ==== */
+  .steps{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+    margin-bottom:22px;
+  }
+  .step{
+    display:flex;
+    gap:14px;
+    padding:14px 0;
+    position:relative;
+  }
+  .step:not(:last-child)::after{
+    content:"";
+    position:absolute;
+    left:15px;
+    top:44px;
+    bottom:-6px;
+    width:2px;
+    background:var(--color-border);
+  }
+  .step-num{
+    flex:none;
+    width:32px;height:32px;
+    border-radius:50%;
+    background:var(--color-primary);
+    color:var(--color-primary-text);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;
+    font-size:14px;
+    z-index:1;
+  }
+  .step-body{ flex:1; min-width:0; padding-top:2px; }
+  .step-body h3{ font-size:14.5px; margin:0 0 6px; }
+  .step-body p{ font-size:13.5px; color:var(--color-text-muted); margin:0; }
+
+  .caveat{
+    display:flex;
+    gap:8px;
+    background:var(--color-warning-bg);
+    border:1px solid var(--color-warning-border);
+    color:var(--color-warning-text);
+    border-radius:var(--radius-md);
+    padding:12px 14px;
+    font-size:12.5px;
+    margin-bottom:22px;
+  }
+
+  /* ==== デモ埋め込み ==== */
+  .demo-frame{
+    border:1px solid var(--color-border);
+    border-radius:var(--radius-lg);
+    overflow:hidden;
+    box-shadow:var(--shadow-card);
+    background:var(--color-surface-alt);
+  }
+  .demo-frame .fake-topbar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:9px 12px;
+    background:var(--color-surface-alt);
+    border-bottom:1px solid var(--color-border);
+    font-size:11.5px;
+    color:var(--color-text-faint);
+  }
+  .fake-dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--color-border);
+    flex:none;
+  }
+  .demo-frame iframe{
+    width:100%;
+    height:460px;
+    border:none;
+    background:var(--color-surface);
+  }
+  .demo-link-row{
+    display:flex;
+    justify-content:center;
+    margin-top:14px;
+  }
+
+  /* ==== FAQ ==== */
+  .faq-item{
+    background:var(--color-surface);
+    border:1px solid var(--color-border);
+    border-radius:var(--radius-md);
+    padding:4px 16px;
+    margin-bottom:10px;
+  }
+  .faq-item summary{
+    cursor:pointer;
+    list-style:none;
+    padding:14px 0;
+    font-size:14.5px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .faq-item summary::-webkit-details-marker{ display:none; }
+  .faq-item summary::after{
+    content:"+";
+    font-size:18px;
+    font-weight:400;
+    color:var(--color-text-faint);
+    flex:none;
+  }
+  .faq-item[open] summary::after{ content:"−"; }
+  .faq-item p{
+    font-size:13.5px;
+    color:var(--color-text-muted);
+    margin:0 0 16px;
+    line-height:1.75;
+  }
+
+  /* ==== waitlistフォーム ==== */
+  #waitlist .card{ padding:24px; }
+  .form-row{ margin-bottom:18px; }
+  .form-row label.field-label{
+    display:block;
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  .form-row .req{ color:var(--color-accent); font-weight:700; }
+  .form-row .opt{ color:var(--color-text-faint); font-weight:500; font-size:12px; }
+  .form-row input[type="text"],
+  .form-row input[type="email"],
+  .form-row textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--color-border);
+    border-radius:var(--radius-sm);
+    background:var(--color-surface);
+    color:var(--color-text);
+    font-family:inherit;
+    font-size:14px;
+  }
+  .form-row input:focus, .form-row textarea:focus{
+    outline:2px solid var(--color-primary);
+    outline-offset:1px;
+  }
+  .form-row textarea{ resize:vertical; min-height:70px; }
+
+  .pill-group{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .pill-group input[type="radio"]{
+    position:absolute;
+    opacity:0;
+    width:1px; height:1px;
+  }
+  .pill-group label{
+    appearance:none;
+    border:1px solid var(--color-border);
+    background:var(--color-surface);
+    color:var(--color-text-muted);
+    font-size:13px;
+    font-weight:500;
+    padding:8px 14px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .pill-group input[type="radio"]:checked + label{
+    background:var(--color-primary);
+    border-color:var(--color-primary);
+    color:var(--color-primary-text);
+  }
+  .pill-group input[type="radio"]:focus-visible + label{
+    outline:2px solid var(--color-primary);
+    outline-offset:2px;
+  }
+
+  /* ハニーポット: 見た目上だけ隠す（display:none は使わない） */
+  .hp-field{
+    position:absolute;
+    left:-9999px;
+    top:auto;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+  }
+
+  .form-status{
+    margin-top:12px;
+    font-size:13px;
+    font-weight:500;
+    color:var(--color-warning-text);
+    background:var(--color-warning-bg);
+    border:1px solid var(--color-warning-border);
+    border-radius:var(--radius-sm);
+    padding:9px 12px;
+    display:none;
+  }
+  .form-status.is-show{ display:block; }
+
+  .success-box[hidden]{display:none}
+  .success-box{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    background:var(--color-accent-soft);
+    color:var(--color-accent);
+    border-radius:var(--radius-md);
+    padding:16px;
+    font-size:14px;
+    font-weight:700;
+  }
+  .success-box .success-sub{
+    display:block;
+    font-weight:500;
+    color:var(--color-text-muted);
+    margin-top:4px;
+    font-size:13px;
+  }
+
+  footer.page-foot{
+    padding:28px 0 8px;
+    text-align:center;
+    font-size:12.5px;
+    color:var(--color-text-faint);
+    line-height:1.9;
+  }
+
+  @media (max-width:480px){
+    .wrap{ padding:0 12px 40px; }
+    .card{ padding:16px; }
+    #waitlist .card{ padding:18px; }
+    .hero h1{ font-size:24px; }
+    .hero .hero-sub{ font-size:14.5px; }
+    section{ padding:32px 0; }
+    .demo-frame iframe{ height:380px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="site-head">
+    <div class="brand">
+      <div class="brand-mark">SH</div>
+      <div class="brand-name">skill-hub</div>
+    </div>
+    <a class="head-cta" href="#waitlist">先行登録する</a>
+  </header>
+
+  <!-- ============ ヒーロー ============ -->
+  <section class="hero">
+    <span class="eyebrow">🚧 開発中・先行登録受付中</span>
+    <h1>Claudeのスキルを、社内のみんなに。<br>GitHubなし・メールアドレスとパスワードだけで配布と自動更新。</h1>
+    <p class="hero-sub">Claudeの個人プラン（Pro/Max）をすでに使っている組織向けです。GitHubアカウントを持っていないメンバーにも、スキルを配って・更新して・使い続けてもらえる仕組みを作っています。</p>
+    <div class="hero-actions">
+      <a class="btn" href="#waitlist">先行登録する</a>
+      <a class="btn btn-outline" href="#how">仕組みを見る</a>
+    </div>
+    <p class="hero-note">現在は開発前の構想段階です。まだ動くサービスはありません。</p>
+  </section>
+
+  <!-- ============ こんなことで困っていませんか ============ -->
+  <section id="pain">
+    <h2 class="section-title">こんなことで困っていませんか</h2>
+    <p class="section-lead">Claudeのスキルを社内で作って配っている方から、よく聞く悩みです。</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-icon">📎</div>
+        <p>スキルを改訂するたびzipを作り直して送っている。開けない人がいると、一人ずつ電話で確認している。</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">❓</div>
+        <p>誰が古い版のスキルを使っているか分からない。気づくのは、古い版のまま作った書類を客先に出してしまってから。</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🔒</div>
+        <p>GitHubアカウントを持っていないメンバーには、そもそもスキルを配る手段がない。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 仕組み ============ -->
+  <section id="how">
+    <h2 class="section-title">仕組み</h2>
+    <p class="section-lead">配る人が1回アップロードすれば、使う人は何もしなくても常に最新版が届きます。</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>配る人がzipをアップロード</h3>
+          <p>スキル本体と、それに付随するファイル（テンプレート・参考資料・スクリプトなど）をまとめてアップロードします。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>使う人はClaudeアプリにURLを1回追加してログイン</h3>
+          <p>配られたURLをコネクタとして追加し、メールアドレスとパスワードでログインします。GitHubアカウントは不要です。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>以後は自動で最新版が使われる</h3>
+          <p>普段の会話の中で、常に最新のスキルが読み込まれます。配り直しの連絡や、古い版を使い続ける心配がなくなります。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="caveat">
+      <span>⚠️</span>
+      <span>スキルに添付したファイル（テンプレート・参考資料・スクリプトなど）もまとめて配布できるようにする予定ですが、スクリプトの実行方式（どこで・どう動かすか）は現在検証中です。詳しくはFAQをご覧ください。</span>
+    </div>
+
+    <div class="demo-frame">
+      <div class="fake-topbar">
+        <span class="fake-dot"></span><span class="fake-dot"></span><span class="fake-dot"></span>
+        <span>画面イメージ（実際には動作しません）</span>
+      </div>
+      <iframe src="./demo.html" title="skill-hub 画面イメージ（開発中・実際には動作しません）"></iframe>
+    </div>
+    <div class="demo-link-row">
+      <a class="btn btn-outline" href="./demo.html" target="_blank" rel="noopener">画面イメージを別タブで見る</a>
+    </div>
+  </section>
+
+  <!-- ============ よくある質問 ============ -->
+  <section id="faq">
+    <h2 class="section-title">よくある質問</h2>
+
+    <details class="faq-item">
+      <summary>Claude Team／Enterpriseプランとの違いは何ですか？</summary>
+      <p>組織プラン（Claude Team／Enterprise）をお使いであれば、その標準機能でスキルを配布・管理できます。skill-hub は、組織プランに移行せず、Claudeの個人プラン（Pro/Max）のまま使い続けたい組織向けに作っています。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>入力した個人情報や、配布するスキルの中身はどこに保存されますか？</summary>
+      <p>保存先や取り扱いの詳細は、開発を進める中で日本語で明示します。先行登録いただいた方には、仕様が固まり次第、他の方より先にお知らせします。現時点で具体的な保存場所・保存期間はお約束できません。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Anthropic社の公式サービスですか？</summary>
+      <p>いいえ、非公式のサービスです。Anthropic社とは提携しておらず、Claudeは Anthropic の商標です。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>いつから使えるようになりますか？</summary>
+      <p>一定数の先行登録が集まり次第、開発を始める予定です。開発の開始時期・利用開始時期は現時点では未定です。進捗があり次第、先行登録いただいたメールアドレス宛にお知らせします。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>料金はいくらですか？</summary>
+      <p>未定です。先行登録いただいた方には、料金が決まり次第、他の方より先にお知らせします。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>スキルに付随するスクリプトは、そのままアップロードすれば動きますか？</summary>
+      <p>スキルに添付したファイル（テンプレート・参考資料・スクリプトなど）をまとめて配布できるようにする予定ですが、スクリプトの実行方式は現在検証中です。ファイルの配布自体はできても、スクリプトの自動実行は仕様が固まるまで確約できません。</p>
+    </details>
+  </section>
+
+  <!-- ============ waitlist ============ -->
+  <section id="waitlist">
+    <h2 class="section-title">先行登録</h2>
+    <p class="section-lead">開発の判断材料にするため、まずはご興味のある方の情報を集めています。仕様や料金が決まり次第、ここに登録した方に先にお知らせします。</p>
+
+    <div class="card">
+      <form id="waitlist-form" novalidate>
+
+        <div class="form-row">
+          <label class="field-label" for="field-email">メールアドレス <span class="req">必須</span></label>
+          <input type="email" id="field-email" name="email" required autocomplete="email" placeholder="you@example.co.jp">
+        </div>
+
+        <div class="form-row">
+          <label class="field-label" for="field-company">会社名・所属 <span class="opt">任意</span></label>
+          <input type="text" id="field-company" name="company" autocomplete="organization" placeholder="例: ○○株式会社 総務部">
+        </div>
+
+        <div class="form-row">
+          <span class="field-label">Claudeを使っている人数</span>
+          <div class="pill-group" role="radiogroup" aria-label="Claudeを使っている人数">
+            <input type="radio" id="seats-1" name="seats" value="1〜3人">
+            <label for="seats-1">1〜3人</label>
+            <input type="radio" id="seats-2" name="seats" value="4〜10人">
+            <label for="seats-2">4〜10人</label>
+            <input type="radio" id="seats-3" name="seats" value="11〜30人">
+            <label for="seats-3">11〜30人</label>
+            <input type="radio" id="seats-4" name="seats" value="31人以上">
+            <label for="seats-4">31人以上</label>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <span class="field-label">使っているプラン</span>
+          <div class="pill-group" role="radiogroup" aria-label="使っているプラン">
+            <input type="radio" id="plan-pro" name="plan" value="Pro">
+            <label for="plan-pro">Pro</label>
+            <input type="radio" id="plan-max" name="plan" value="Max">
+            <label for="plan-max">Max</label>
+            <input type="radio" id="plan-mix" name="plan" value="混在">
+            <label for="plan-mix">混在</label>
+            <input type="radio" id="plan-other" name="plan" value="その他">
+            <label for="plan-other">その他</label>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label class="field-label" for="field-usecase">配りたいスキルの例 <span class="opt">任意</span></label>
+          <textarea id="field-usecase" name="usecase" placeholder="例: 見積書作成のスキルを、経理担当以外のメンバーにも配りたい"></textarea>
+        </div>
+
+        <!-- ハニーポット: 人には見えない欄。ボットが埋めると送信先で捨てられる -->
+        <div class="hp-field" aria-hidden="true">
+          <label for="field-website">website</label>
+          <input type="text" id="field-website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+
+        <input type="hidden" id="field-ref" name="ref" value="">
+
+        <button type="submit" class="btn btn-block">先行登録する</button>
+        <div class="form-status" id="form-status"></div>
+      </form>
+
+      <div class="success-box" id="waitlist-success" hidden>
+        <span>✅</span>
+        <span>ご登録ありがとうございます。<span class="success-sub">仕様や料金が決まり次第、ご登録いただいたメールアドレス宛にお知らせします。</span></span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="page-foot">
+    <div>運営: つむぎや株式会社</div>
+    <div>Anthropic社とは提携していません。Claudeは Anthropic の商標です。</div>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // GASのデプロイURLは後で入れる
+  const WAITLIST_ENDPOINT = '';
+
+  var refInput = document.getElementById('field-ref');
+  if (refInput) { refInput.value = location.search || ''; }
+
+  var form = document.getElementById('waitlist-form');
+  var statusEl = document.getElementById('form-status');
+  var successEl = document.getElementById('waitlist-success');
+  if (!form) { return; }
+
+  function showStatus(msg){
+    statusEl.textContent = msg;
+    statusEl.classList.add('is-show');
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    statusEl.classList.remove('is-show');
+
+    if (!WAITLIST_ENDPOINT) {
+      console.warn('skill-hub: WAITLIST_ENDPOINT が未設定のため送信できません。');
+      showStatus('準備中です。もうしばらくお待ちください。');
+      return;
+    }
+
+    var submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = '送信中…';
+
+    var formData = new FormData(form);
+    fetch(WAITLIST_ENDPOINT, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: new URLSearchParams(formData)
+    }).then(function(){
+      form.hidden = true;
+      successEl.hidden = false;
+    }).catch(function(err){
+      console.warn('skill-hub: waitlist送信に失敗しました', err);
+      showStatus('送信できませんでした。時間をおいて再度お試しください。');
+      submitBtn.disabled = false;
+      submitBtn.textContent = '先行登録する';
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
