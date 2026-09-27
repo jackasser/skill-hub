@@ -2,6 +2,24 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<!-- アクセス解析: GA4（skill-hub LP プロパティ）と Microsoft Clarity。設定は README.md -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8B6QKZ3JS6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8B6QKZ3JS6');
+  (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "yoqp4a8hcc");
+  // 計測イベントの共通関数（GA4 と Clarity の両方に送る）
+  function track(name, params){
+    try { gtag('event', name, params || {}); } catch(e){}
+    try { window.clarity && clarity('event', name); } catch(e){}
+  }
+</script>
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>skill-hub｜Claudeのスキルを社内に配る（先行登録受付中）</title>
 <meta name="description" content="Claudeの個人プラン（Pro・Max）を何人かで使っている会社のための、スキル配布の仕組みです。スキルとは、仕事の手順をClaudeに教えるための手順書です。GitHubを使わずに、メールアドレスとパスワードだけで、スキルと添付ファイルを配って更新できるようにします。開発中・先行登録受付中。">
@@ -640,6 +658,7 @@
   <div class="wrap">
     <p>運営：<a href="https://tsumugiya-it.com/">つむぎや株式会社</a></p>
     <p>Anthropic とは提携していません。Claude は Anthropic の商標です。</p>
+    <p>このページは、利用状況を知るために Google アナリティクスと Microsoft Clarity を使っています（Cookie を使います）。</p>
   </div>
 </footer>
 
@@ -693,6 +712,24 @@
     io.observe(roster);
   }
 
+
+  /* ---- 計測イベント（README.md「アクセス解析」に一覧） ---- */
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a,button');
+    if (!a) return;
+    if (a.matches('.header-cta')) track('cta_click', {cta_id: 'header'});
+    else if (a.matches('.hero-actions .btn')) track('cta_click', {cta_id: 'hero'});
+    else if (a.getAttribute('href') === './demo.html') track('demo_open', {link_id: a.closest('.hero') ? 'hero' : 'flow'});
+    else if (a.id === 'roster-btn') track('roster_replay');
+  });
+  document.querySelectorAll('.faq details').forEach(function(d, i){
+    d.addEventListener('toggle', function(){ if (d.open) track('faq_open', {faq_index: i + 1}); });
+  });
+  var formStarted = false;
+  document.getElementById('waitlist-form').addEventListener('input', function(){
+    if (!formStarted) { formStarted = true; track('form_start'); }
+  });
+
   /* ---- 先行登録フォーム ---- */
   const WAITLIST_ENDPOINT = 'https://script.google.com/macros/s/AKfycbx9KTXaO-VfsZNd294DqCpXLdrkYP8jG2f5DSvljHurRSXMwaG4GGuYx77GzHTLYwb1fw/exec';
 
@@ -706,6 +743,7 @@
     statusEl.textContent = '';
     var email = form.elements.email;
     if (!email.value.trim() || !email.checkValidity()) {
+      track('form_error', {error_type: 'invalid_email'});
       statusEl.textContent = 'メールアドレスを、you@example.co.jp の形で入力してください。';
       email.focus();
       return;
@@ -717,11 +755,13 @@
     var t = setTimeout(function(){ ctrl.abort(); }, 20000);
     fetch(WAITLIST_ENDPOINT, {method:'POST', mode:'no-cors', body:new URLSearchParams(new FormData(form)), signal:ctrl.signal})
       .then(function(){
+        track('generate_lead', {form_id: 'waitlist', seats: (form.elements.seats.value || '未回答'), plan: (form.elements.plan.value || '未回答')});
         form.hidden = true;
         doneEl.hidden = false;
         doneEl.focus();
       })
       .catch(function(){
+        track('form_error', {error_type: 'network'});
         statusEl.textContent = '送信できませんでした。入力内容はそのままです。通信を確かめて、もう一度「先行登録する」を押してください。';
         submit.disabled = false;
         submit.textContent = '先行登録する';
