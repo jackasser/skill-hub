@@ -8,6 +8,9 @@
 <meta property="og:title" content="skill-hub｜スキルを直したら、全員に新しい版が届く">
 <meta property="og:description" content="Claudeの個人プランのまま、スキルを社内に配って更新する仕組み。GitHub不要。開発中・先行登録受付中。">
 <meta property="og:type" content="website">
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<link rel="icon" href="./favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
@@ -69,7 +72,7 @@
 
   /* ヒーロー（§5-3〜5-11） */
   .hero{padding:56px 0 64px}
-  .hero .wrap{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:56px; align-items:center}
+  .hero .wrap{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:56px; align-items:center}
   .status{font-size:15px; color:var(--brand); font-weight:700; margin-bottom:16px}
   .hero h1{font-size:34px; letter-spacing:.01em}
   .hero .lead{margin-top:20px}
@@ -118,8 +121,10 @@
   .app-side a.on{color:var(--brand); font-weight:700; background:var(--brand-soft); border-left:3px solid var(--brand); padding-left:13px}
   .app-main{padding:20px}
   .app-window .roster{border:0; padding:0; border-radius:0}
-  .app-window{margin-right:40px}
-  .app-main{padding-bottom:36px}
+  .hero .app-main{padding-bottom:64px}
+  .hero .laptop{margin-right:64px}
+  .hero .app-body{grid-template-columns:124px minmax(0,1fr)}
+  .hero .app-side b{white-space:nowrap; font-size:13px}
   .chat-card{position:relative; margin:-28px 0 0 auto; width:270px; background:var(--surface); border:1px solid var(--line);
     border-radius:14px; padding:14px; font-size:13px; line-height:1.6; box-shadow:0 18px 40px -20px rgba(20,40,32,.5)}
   .chat-card .label{font-size:12px; color:var(--muted); margin-bottom:8px}
@@ -160,6 +165,86 @@
   .mini-field small{display:block; font-size:11px; color:var(--muted)}
   .mini-field span{display:block; border:1px solid var(--line); border-radius:6px; padding:3px 8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
   .mini-btn{display:inline-block; margin-top:4px}
+
+
+  /* v4: 画面だと一目で分かるように、PC・スマホの枠に入れる（オーナー指示 2026-09-27） */
+  :root{--bezel:#232a28; --bezel-edge:#3a4340; --deck:#c9cec8; --deck-shadow:#a9afa9}
+  :root[data-theme="dark"]{--bezel:#0a0d0c; --bezel-edge:#2a322f; --deck:#3a423f; --deck-shadow:#262c2a}
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bezel:#0a0d0c; --bezel-edge:#2a322f; --deck:#3a423f; --deck-shadow:#262c2a}}
+  .laptop{position:relative}
+  .laptop-lid{background:var(--bezel); border:1px solid var(--bezel-edge); border-radius:16px 16px 4px 4px; padding:14px 12px 16px; position:relative}
+  .laptop-lid::before{content:""; position:absolute; top:5px; left:50%; width:5px; height:5px; margin-left:-2px; border-radius:50%; background:var(--bezel-edge)}
+  .laptop-lid > .app-window,.laptop-lid > .mini{border:0; border-radius:3px; box-shadow:none; margin:0}
+  .laptop-deck{height:14px; margin:0 -6%; background:linear-gradient(var(--deck),var(--deck-shadow)); border-radius:2px 2px 14px 14px; position:relative;
+    box-shadow:0 18px 30px -18px rgba(20,40,32,.55)}
+  .laptop-deck::before{content:""; position:absolute; top:0; left:50%; width:16%; height:5px; transform:translateX(-50%); background:var(--deck-shadow); border-radius:0 0 8px 8px}
+  .laptop.sm .laptop-lid{padding:9px 8px 10px; border-radius:12px 12px 3px 3px}
+  .laptop.sm .laptop-lid::before{top:3px; width:4px; height:4px}
+  .laptop.sm .laptop-deck{height:9px}
+  .addr{flex:1; margin-left:10px; background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:1px 12px; color:var(--muted);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:11px; max-width:260px}
+  .phone{background:var(--bezel); border:1px solid var(--bezel-edge); border-radius:30px; padding:12px 9px; box-shadow:0 22px 40px -18px rgba(20,40,32,.6)}
+  .phone-screen{background:var(--surface); border-radius:20px; overflow:hidden; padding:26px 12px 16px; position:relative; font-size:13px; line-height:1.6}
+  .phone-screen::before{content:""; position:absolute; top:8px; left:50%; width:64px; height:6px; margin-left:-32px; border-radius:999px; background:var(--bezel)}
+  .phone .label{font-size:11px; color:var(--muted); margin-bottom:8px; text-align:center}
+  .hero-phone{position:relative; width:210px; margin:-78px 0 0 auto; z-index:2}
+
+
+  /* v5: しくみの概念図（オーナー指摘「仕組みの概念図などもないので、サービスが何かわからない」） */
+  .concept{padding:64px 0 72px; border-top:1px solid var(--line); background:var(--surface)}
+  .concept h2{font-size:27px}
+  .concept .one{margin-top:12px; font-size:19px; font-weight:700; max-width:36em}
+  .cmap{display:grid; grid-template-columns:minmax(0,1fr) 150px minmax(0,1.15fr) 150px minmax(0,1fr); align-items:center; margin-top:40px}
+  .node{border:2px solid var(--line); border-radius:14px; padding:20px 16px; background:var(--bg); text-align:center}
+  .node h3{font-size:17px; margin-top:10px}
+  .node p{font-size:14px; color:var(--muted); margin-top:4px}
+  .node svg{display:block; margin:0 auto; width:72px; height:56px}
+  .ico-line{stroke:var(--ink); stroke-width:2.5; fill:none; stroke-linecap:round; stroke-linejoin:round}
+  .ico-fill{fill:var(--brand)}
+  .node.hub{border-color:var(--brand); background:var(--brand); color:var(--surface)}
+  .node.hub p{color:var(--surface); opacity:.85}
+  .hub-list{margin:14px 0 0; padding:0; list-style:none; text-align:left; font-size:14px}
+  .hub-list li{display:flex; justify-content:space-between; gap:8px; background:var(--surface); color:var(--ink); border-radius:8px; padding:6px 10px; font-variant-numeric:tabular-nums}
+  .hub-list li + li{margin-top:6px}
+  .hub-list b{color:var(--brand)}
+  .hub-lock{margin-top:12px; font-size:13px; display:flex; gap:6px; justify-content:center; align-items:center}
+  .users{display:grid; gap:10px}
+  .user{display:flex; align-items:center; gap:10px; border:2px solid var(--line); border-radius:12px; background:var(--bg); padding:10px 12px; font-size:14px}
+  .user svg{flex:none; width:34px; height:34px}
+  .user b{margin-left:auto; color:var(--brand); font-variant-numeric:tabular-nums}
+  .users-cap{text-align:center; font-weight:700; margin-bottom:4px}
+  .arrow{position:relative; text-align:center; font-size:13px; line-height:1.5; padding:0 8px}
+  .arrow .lbl{display:inline-block; background:var(--surface); padding:2px 4px; position:relative; z-index:1}
+  .arrow .lbl b{display:block; font-size:14px; color:var(--brand)}
+  .arrow .lbl small{display:block; color:var(--muted); font-size:12px}
+  .arrow::before{content:""; position:absolute; left:6px; right:14px; top:50%; border-top:3px solid var(--brand)}
+  .arrow::after{content:""; position:absolute; right:4px; top:50%; margin-top:-7px; border:8px solid transparent; border-left:12px solid var(--brand); border-right:0}
+  .arrow.back{margin-top:18px}
+  .arrow.back::before{border-top:3px dashed var(--muted); left:14px; right:6px}
+  .arrow.back::after{right:auto; left:4px; border-left:0; border-right:12px solid var(--muted)}
+  .arrow-pair{display:grid; gap:0}
+  .concept-note{margin-top:28px; font-size:14px; color:var(--muted)}
+  @media (max-width: 860px){
+    .concept{padding:48px 0 56px}
+    .concept h2{font-size:23px}
+    .cmap{grid-template-columns:1fr; gap:0}
+    .arrow{padding:28px 0}
+    .arrow::before{left:50%; right:auto; top:0; bottom:14px; border-top:0; border-left:3px solid var(--brand)}
+    .arrow::after{left:50%; right:auto; top:auto; bottom:2px; margin:0 0 0 -8px; border:8px solid transparent; border-top:12px solid var(--brand); border-bottom:0}
+    .arrow.back{display:none}
+    .arrow .lbl{margin-left:24px}
+  }
+
+  /* v6: レビュー反映 */
+  .hero .sub{margin-top:10px; font-size:21px; font-weight:700; color:var(--brand)}
+  .points{margin:20px 0 0; padding:0; list-style:none; max-width:34em}
+  .points li{position:relative; padding-left:26px}
+  .points li + li{margin-top:6px}
+  .points li::before{content:""; position:absolute; left:2px; top:.55em; width:12px; height:7px; border-left:3px solid var(--brand); border-bottom:3px solid var(--brand); transform:rotate(-45deg)}
+  .hub-op{margin-top:8px; font-size:12px; opacity:.85}
+  .users-cap small{display:block; font-weight:400; font-size:12px; color:var(--muted)}
+  .roster-btn.replay{border-style:dashed}
+  @media (max-width: 860px){ .laptop-lid{padding:8px 6px 10px} .hero .sub{font-size:18px} .hero .app-body{grid-template-columns:1fr} .hero .laptop{margin:0 4%} }
 
   /* セクション共通 */
   section.block{padding:72px 0; border-top:1px solid var(--line)}
@@ -247,14 +332,14 @@
     section.block{padding:56px 0}
     .block h2{font-size:23px}
     .fit{grid-template-columns:1fr}
-    .chat-card{position:static; width:auto; margin:16px 0 0 24px}
+    .hero .laptop{margin:0 6%}
+    .hero-phone{margin:-40px 8px 0 auto; width:200px}
     .hero .roster-caption{margin-top:12px}
     .app-body{grid-template-columns:1fr}
     .app-side{display:none}
     .flowviz{grid-template-columns:1fr}
     ol.steps > li{grid-template-columns:40px minmax(0,1fr)}
-    ol.steps > li .mini{grid-column:2; margin-top:16px}
-    .app-window{margin-right:0}
+    ol.steps > li .laptop{grid-column:2; margin-top:16px; margin-left:6%; margin-right:6%}
     /* 比較表はスマホで行ごとの縦並び（運営ブランドの料金表と同じ扱い） */
     .compare,.compare tbody,.compare tr,.compare th,.compare td{display:block; width:auto}
     .compare thead{display:none}
@@ -291,19 +376,26 @@
   <section class="hero" aria-labelledby="hero-title">
     <div class="wrap">
       <div>
-        <p class="status">開発中・先行登録を受け付けています</p>
-        <h1 id="hero-title">スキルを直したら、<br>全員に新しい版が届く。</h1>
-        <p class="lead measure">Claudeの個人プラン（Pro・Max）を何人かで使っている会社のための、スキル配布の仕組みです。スキルとは、仕事の手順をClaudeに教えるための手順書です。GitHubを使わずに、メールアドレスとパスワードだけで、スキルと添付ファイルを配って更新できるようにします。</p>
+        <p class="status">開発前・先行登録を受け付けています</p>
+        <h1 id="hero-title">Claudeのスキルを、<br>社内のみんなに配る。</h1>
+        <p class="sub">直したら、全員に新しい版が届きます。</p>
+        <ul class="points">
+          <li>Claudeの個人プラン（Pro・Max）を、社内の何人かで使っている会社向け</li>
+          <li>GitHubはいりません。メールアドレスとパスワードだけで使えます</li>
+          <li>スキル（仕事の手順をClaudeに教える手順書）と、添付のテンプレートをまとめて配れます</li>
+        </ul>
         <div class="hero-actions">
-          <a class="btn" href="#waitlist">先行登録する（無料）</a>
+          <a class="btn" href="#waitlist">先行登録する</a>
           <a class="text-link" href="./demo.html">画面イメージを見る</a>
         </div>
-        <p class="after-note">登録すると、仕様と料金が決まった時点でメールでお知らせします。</p>
+        <p class="after-note">先行登録した方には、仕様を決める前にご意見をうかがい、料金と開始時期も先にお知らせします。</p>
       </div>
 
       <figure class="roster-fig shot">
+        <div class="laptop">
+          <div class="laptop-lid">
         <div class="app-window" role="group" aria-label="skill-hub 管理画面の画面イメージ。見積書作成スキルを最新版で使っている人の数と、一人ひとりの版">
-          <div class="app-bar" aria-hidden="true"><i></i><i></i><i></i><span>skill-hub 管理画面</span></div>
+          <div class="app-bar" aria-hidden="true"><i></i><i></i><i></i><span class="addr">skill-hub 管理画面 ― 配布状況</span></div>
           <div class="app-body">
             <div class="app-side" aria-hidden="true"><b>サンプル商事</b><a>配布中のスキル</a><a class="on">配布状況</a><a>メンバー</a></div>
             <div class="app-main">
@@ -330,17 +422,45 @@
             </div>
           </div>
         </div>
-        <div class="chat-card">
+          </div>
+          <div class="laptop-deck" aria-hidden="true"></div>
+        </div>
+        <div class="phone hero-phone">
+          <div class="phone-screen">
           <p class="label">使う人のClaudeアプリ（イメージ）</p>
           <p class="bubble">来月分の見積書を作って</p>
           <p class="loaded">skill-hub から「見積書作成」v1.4 を読み込みました</p>
           <p class="answer">テンプレート v1.4 に沿って、見積書の下書きを作りました。</p>
+          </div>
         </div>
-        <figcaption class="roster-caption">画面イメージ（開発中）。左は配る人の管理画面、右下は使う人のClaudeアプリです。</figcaption>
+        <figcaption class="roster-caption">画面イメージ（開発中）。パソコンは配る人の管理画面、スマホは使う人のClaudeアプリです。</figcaption>
       </figure>
     </div>
   </section>
 
+
+  <section class="concept" aria-labelledby="concept-title">
+    <div class="wrap">
+      <h2 id="concept-title">skill-hub のしくみ</h2>
+      <p class="one">社内のスキルを1か所に置いて、みんなのClaudeにつなぐ「スキルの置き場」です。</p>
+      <div class="cmap" role="img" aria-label="配る人がスキルをskill-hubにアップロードし、使う人のClaudeが頼まれたときに最新版を受け取る。使う人は最初に1回だけURLを追加してログインする">
+        <div class="node"><svg viewBox="0 0 72 56" aria-hidden="true"><rect class="ico-line" x="12" y="6" width="48" height="32" rx="3"/><path class="ico-line" d="M4 46 H68 L62 38 H10 Z"/><rect class="ico-fill" x="20" y="14" width="20" height="4" rx="2"/><rect class="ico-fill" x="20" y="22" width="30" height="4" rx="2" opacity=".5"/></svg><h3>配る人のパソコン</h3><p>スキルを作る・直す</p></div>
+        <div class="arrow"><span class="lbl"><b>① アップロード</b><small>直したら、もう一度</small></span></div>
+        <div class="node hub"><svg viewBox="0 0 72 56" aria-hidden="true"><rect x="14" y="6" width="44" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="14" y="22" width="44" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/><rect x="14" y="38" width="44" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="22" cy="12" r="2" fill="currentColor"/><circle cx="22" cy="28" r="2" fill="currentColor"/><circle cx="22" cy="44" r="2" fill="currentColor"/></svg><h3>skill-hub</h3><p>会社専用のスキルの置き場</p>
+          <ul class="hub-list"><li>見積書作成<b>v1.4</b></li><li>議事録整形<b>v2.1</b></li><li>請求書チェック<b>v1.0</b></li></ul>
+          <p class="hub-lock">メールアドレス＋パスワードで入る</p><p class="hub-op">つむぎや株式会社が運営するWebサービス（Anthropic公式ではありません）</p></div>
+        <div class="arrow-pair">
+          <div class="arrow"><span class="lbl"><b>③ 最新版を渡す</b><small>頼まれたとき、毎回</small></span></div>
+          <div class="arrow back"><span class="lbl"><b style="color:var(--muted)">② つなぐ</b><small>最初に1回だけ</small></span></div>
+        </div>
+        <div><p class="users-cap">使う人のClaude<small>それぞれ自分のPro・Maxのまま</small></p><div class="users">
+          <div class="user"><svg viewBox="0 0 34 34" aria-hidden="true"><rect class="ico-line" x="4" y="5" width="26" height="18" rx="2"/><path class="ico-line" d="M1 28 H33"/><path class="ico-fill" d="M10 12 h14 v3 h-14z"/></svg>田中さん<b>v1.4</b></div>
+          <div class="user"><svg viewBox="0 0 34 34" aria-hidden="true"><rect class="ico-line" x="4" y="5" width="26" height="18" rx="2"/><path class="ico-line" d="M1 28 H33"/><path class="ico-fill" d="M10 12 h14 v3 h-14z"/></svg>鈴木さん<b>v1.4</b></div>
+          <div class="user"><svg viewBox="0 0 34 34" aria-hidden="true"><rect class="ico-line" x="4" y="5" width="26" height="18" rx="2"/><path class="ico-line" d="M1 28 H33"/><path class="ico-fill" d="M10 12 h14 v3 h-14z"/></svg>伊藤さん<b>v1.4</b></div></div></div>
+      </div>
+      <p class="concept-note">GitHub のアカウントはいりません。使う人は、Claude の「カスタマイズ」から skill-hub の URL を1回追加してログインするだけです。</p>
+    </div>
+  </section>
   <section class="block" aria-labelledby="compare-title">
     <div class="wrap">
       <h2 id="compare-title">zipで配っている今のやり方と、何が変わるか</h2>
@@ -367,7 +487,7 @@
             <td class="now" data-label="今">一人ずつ聞くまで分からない</td>
             <td class="new" data-label="skill-hub">配布状況の画面で分かる</td></tr>
           <tr><th scope="row">GitHubアカウント</th>
-            <td class="now" data-label="今">自動更新にするには、非公開で配る場合は全員に必要</td>
+            <td class="now" data-label="今">非公開のまま自動で更新するには、使う人全員にGitHubアカウントが必要</td>
             <td class="new" data-label="skill-hub">いらない</td></tr>
         </tbody>
       </table>
@@ -380,17 +500,17 @@
       <p class="intro measure">使う人の作業は、最初の1回だけです。</p>
       <ol class="steps">
         <li><div><h3><span class="who">配る人・最初に1回</span>使う人のメールアドレスを登録する</h3>
-          <p>登録した人に招待メールが届きます。パスワードは使う人が自分で決めるので、配る人が発行して渡す必要はありません。</p></div><div class="mini" aria-hidden="true"><div class="app-bar"><i></i><i></i><i></i><span>skill-hub 管理画面</span></div><div class="mini-body"><div class="mini-input"><span>tanaka@example.co.jp</span><b>招待する</b></div><div class="mini-row">sato@example.co.jp<em>参加済み</em></div><div class="mini-row">suzuki@example.co.jp<em>招待メール送信</em></div></div></div></li>
+          <p>登録した人に招待メールが届きます。パスワードは使う人が自分で決めるので、配る人が発行して渡す必要はありません。</p></div><div class="laptop sm" aria-hidden="true"><div class="laptop-lid"><div class="mini"><div class="app-bar"><i></i><i></i><i></i><span>skill-hub 管理画面</span></div><div class="mini-body"><div class="mini-input"><span>tanaka@example.co.jp</span><b>招待する</b></div><div class="mini-row">sato@example.co.jp<em>参加済み</em></div><div class="mini-row">suzuki@example.co.jp<em>招待メール送信</em></div></div></div></div><div class="laptop-deck"></div></div></li>
         <li><div><h3><span class="who">配る人・スキルを直すたびに</span>スキルをzipにしてアップロードする</h3>
-          <p>手順書と、テンプレートや参考資料などの添付ファイルをまとめてアップロードします。</p></div><div class="mini" aria-hidden="true"><div class="app-bar"><i></i><i></i><i></i><span>skill-hub 管理画面</span></div><div class="mini-body"><div class="mini-drop"><b>見積書作成.zip</b>ここにドラッグ＆ドロップ</div><div class="mini-row">手順書.md<span>更新</span></div><div class="mini-row">見積書テンプレート.xlsx<span>更新</span></div><div class="mini-row">公開する版<em>v1.4</em></div></div></div></li>
+          <p>手順書と、テンプレートや参考資料などの添付ファイルをまとめてアップロードします。</p></div><div class="laptop sm" aria-hidden="true"><div class="laptop-lid"><div class="mini"><div class="app-bar"><i></i><i></i><i></i><span>skill-hub 管理画面</span></div><div class="mini-body"><div class="mini-drop"><b>見積書作成.zip</b>ここにドラッグ＆ドロップ</div><div class="mini-row">手順書.md<span>更新</span></div><div class="mini-row">見積書テンプレート.xlsx<span>更新</span></div><div class="mini-row">公開する版<em>v1.4</em></div></div></div></div><div class="laptop-deck"></div></div></li>
         <li><div><h3><span class="who">使う人・最初の1回だけ</span>ClaudeアプリにURLを追加してログインする</h3>
-          <p>Claudeの画面で「カスタマイズ」→「コネクタ」→「＋」と進み、招待メールに書かれたURLを貼り付けます。続けて、メールアドレスとパスワードでログインします。</p></div><div class="mini" aria-hidden="true"><div class="app-bar"><i></i><i></i><i></i><span>Claudeアプリ（イメージ）</span></div><div class="mini-body"><div class="mini-field"><small>カスタマイズ › コネクタ › ＋</small><span>https://…/samplecorp</span></div><div class="mini-field"><small>メールアドレス</small><span>tanaka@example.co.jp</span></div><div class="mini-field"><small>パスワード</small><span>••••••••</span></div><span class="mini-btn">ログイン</span></div></div></li>
+          <p>Claudeの画面で「カスタマイズ」→「コネクタ」→「＋」と進み、招待メールに書かれたURLを貼り付けます。続けて、メールアドレスとパスワードでログインします。</p></div><div class="laptop sm" aria-hidden="true"><div class="laptop-lid"><div class="mini"><div class="app-bar"><i></i><i></i><i></i><span>Claudeアプリ（イメージ）</span></div><div class="mini-body"><div class="mini-field"><small>カスタマイズ › コネクタ › ＋</small><span>https://…/samplecorp</span></div><div class="mini-field"><small>メールアドレス</small><span>tanaka@example.co.jp</span></div><div class="mini-field"><small>パスワード</small><span>••••••••</span></div><span class="mini-btn">ログイン</span></div></div></div><div class="laptop-deck"></div></div></li>
         <li><div><h3><span class="who">使う人・毎回</span>いつもどおりClaudeに頼む</h3>
-          <p>仕事に合ったスキルを、Claudeがその時点の最新版で読み込みます。</p></div><div class="mini" aria-hidden="true"><div class="app-bar"><i></i><i></i><i></i><span>Claudeアプリ（イメージ）</span></div><div class="mini-body"><p class="bubble">来月分の見積書を作って</p><p class="loaded">「見積書作成」v1.4 を読み込みました</p></div></div></li>
+          <p>仕事に合ったスキルを、Claudeがその時点の最新版で読み込みます。</p></div><div class="laptop sm" aria-hidden="true"><div class="laptop-lid"><div class="mini"><div class="app-bar"><i></i><i></i><i></i><span>Claudeアプリ（イメージ）</span></div><div class="mini-body"><p class="bubble">来月分の見積書を作って</p><p class="loaded">「見積書作成」v1.4 を読み込みました</p></div></div></div><div class="laptop-deck"></div></div></li>
       </ol>
       <div class="notice measure" role="note">
         <strong>検証中のこと</strong>
-        添付したスクリプト（プログラム）をClaudeの中で動かす方法は、いま検証しています。動かせる範囲と安全な動かし方が決まったら、登録した方にお知らせします。
+        配れるのは、手順書と、テンプレートや参考資料などのファイルです。添付したスクリプト（プログラム）をClaudeの中で安全に動かす方法はまだ検証中のため、いまはお約束できません。
       </div>
       <p class="demo-link"><a class="text-link" href="./demo.html">配る人・使う人の画面イメージを見る（3画面）</a></p>
     </div>
@@ -441,13 +561,20 @@
         </details>
         <details>
           <summary>料金はいくらですか？</summary>
-          <p>まだ決まっていません。決まったら、登録した方に先にお知らせします。</p>
+          <p>まだ決まっていません。先行登録した方には、料金を決める前にご意見をうかがい、決まったら先にお知らせします。</p>
         </details>
         <details>
           <summary>添付したスクリプトも動きますか？</summary>
           <p>テンプレートや参考資料などのファイルは配れるようにします。スクリプトをClaudeの中で動かす方法は検証中のため、いまはお約束できません。</p>
         </details>
       </div>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="op-title">
+    <div class="wrap">
+      <h2 id="op-title">運営について</h2>
+      <p class="intro measure">skill-hub は、中小企業のAI導入支援と法人向けAI研修を行う <a href="https://tsumugiya-it.com/">つむぎや株式会社</a> が開発を検討しています。</p>
     </div>
   </section>
 
@@ -526,11 +653,19 @@
   var btn = document.getElementById('roster-btn');
   var countEl = document.getElementById('roster-count');
   var noteEl = document.getElementById('roster-note');
-  var played = false;
 
+  var initial = Array.prototype.map.call(roster.querySelectorAll('tbody td:nth-child(2)'), function(td){ return td.innerHTML; });
+  var tds = roster.querySelectorAll('tbody td:nth-child(2)');
+  var running = false;
+  function reset(){
+    Array.prototype.forEach.call(tds, function(td, i){ td.innerHTML = initial[i]; });
+    countEl.textContent = '2';
+    noteEl.textContent = '配る人が新しい版をアップロードすると';
+  }
   function distribute(){
-    if (played) return;
-    played = true;
+    if (running) return;
+    if (btn.classList.contains('replay')) { reset(); }
+    running = true;
     btn.disabled = true;
     var olds = Array.prototype.slice.call(roster.querySelectorAll('[data-old]'));
     var count = 5 - olds.length;
@@ -540,14 +675,20 @@
         el.removeAttribute('data-old');
         el.textContent = 'v1.4';
         countEl.textContent = String(++count);
-        if (count === 5) noteEl.textContent = '全員が最新版になりました';
-      }, reduce ? 0 : 500 + i * 400);
+        if (count === 5) {
+          noteEl.textContent = '全員が最新版になりました';
+          running = false;
+          btn.disabled = false;
+          btn.textContent = 'もう一度見る';
+          btn.classList.add('replay');
+        }
+      }, reduce ? 0 : 400 + i * 900);
     });
   }
   btn.addEventListener('click', distribute);
   if (!reduce && 'IntersectionObserver' in window) {
     var io = new IntersectionObserver(function(entries){
-      if (entries[0].isIntersecting) { io.disconnect(); setTimeout(distribute, 700); }
+      if (entries[0].isIntersecting) { io.disconnect(); setTimeout(distribute, 2500); }
     }, {threshold: 0.6});
     io.observe(roster);
   }
